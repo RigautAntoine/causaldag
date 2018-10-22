@@ -1,7 +1,7 @@
 import networkx as nx
 from networkx.algorithms import simple_paths
 from collections import defaultdict
-import itertools
+from .utils import get_all_possible_sets
 
 class Graph():
     
@@ -67,6 +67,10 @@ class Graph():
             
     def get_all_paths(self, v_a, v_b):
         return list(simple_paths.all_simple_paths(self.G, v_a, v_b))
+    
+    def summarize(self):
+        for (v_a, v_b) in self.edges():
+            print('{} to {}, directed at {}'.format(v_a, v_b, self.get_edge_orientation(v_a, v_b)))
 
         
 class CausalDAG(Graph):
@@ -124,11 +128,6 @@ class CausalDAG(Graph):
                 z_sets.append(z)
 
         return z_sets
-
-        
-    
-    def validate(self, data, vartypes, independence_test):
-        pass
 
 
 class Node():
@@ -204,12 +203,3 @@ class Path():
             
         # Else: return False.
         return False
-
-def get_all_possible_sets(nodes):
-    """
-    Get all possible sets from a given list of nodes
-    """
-    
-    k = len(nodes)
-    
-    return [z for i in range(1, k+1) for z in itertools.combinations(nodes, i)]
