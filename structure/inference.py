@@ -3,7 +3,6 @@ from .utils import get_all_possible_sets
 
 class IC_star():
     
-    
     def __init__(self, data, independence_test, vartypes=None):
         """
         Parameters:
@@ -52,6 +51,7 @@ class IC_star():
         """
         edges = list(self.graph.edges())
         for (v_a, v_b) in edges:
+            
             # Nodes that can be conditioned on
             conditioning_nodes = [n for n in self.graph.nodes() if n not in [v_a, v_b]]
             cn_max = len(conditioning_nodes)
@@ -62,7 +62,9 @@ class IC_star():
             # Going from 1-node to set to larger sets
             found = False
             for q in range(1, cn_max+1):
+                
                 # Iterate for each set:
+                
                 for z_set in get_all_possible_sets(conditioning_nodes, q):
                     
                     self.independence_test.fit(x = [v_a], y = v_b, z = list(z_set), data = self.data)

@@ -8,7 +8,7 @@ def get_all_possible_sets(nodes, k=None, include_empty=False):
         k = len(nodes)+1
         sets = [z for i in range(1, k) for z in itertools.combinations(nodes, i)]
     else:
-        sets = [z for z in itertools.combinations(nodes, 2)]
+        sets = [z for z in itertools.combinations(nodes, k)]
     
     if include_empty:
         sets.append(()) 
