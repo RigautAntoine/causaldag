@@ -3,7 +3,7 @@ from .utils import get_all_possible_sets
 
 class IC_star():
     
-    def __init__(self, data, independence_test, vartypes=None):
+    def __init__(self, data, independence_test, categorical_vars=None):
         """
         Parameters:
         
@@ -12,7 +12,10 @@ class IC_star():
         self.data = data
         self.independence_test = independence_test
         self.nodes = list(data.columns)
-        self.vartypes = vartypes
+        if categorical_vars is None:
+            self.categorical_vars = []
+        else:
+            self.categorical_vars = categorical_vars
         self.graph = None
         self.conditioning_sets = {}
         self.infer()
@@ -52,6 +55,11 @@ class IC_star():
         edges = list(self.graph.edges())
         for (v_a, v_b) in edges:
             
+            if v_b in self.categorical_vars:
+                categorical_outcome=True
+            else:
+                categorical_outcome=False
+            
             # Nodes that can be conditioned on
             conditioning_nodes = [n for n in self.graph.nodes() if n not in [v_a, v_b]]
             cn_max = len(conditioning_nodes)
@@ -67,7 +75,8 @@ class IC_star():
                 
                 for z_set in get_all_possible_sets(conditioning_nodes, q):
                     
-                    self.independence_test.fit(x = [v_a], y = v_b, z = list(z_set), data = self.data)
+                    
+                    self.independence_test.fit(x = [v_a], y = v_b, z = list(z_set), categorical_outcome=categorical_outcome, data = self.data)
                     
                     if self.independence_test.is_independent():
                         # Update self.conditioning_sets

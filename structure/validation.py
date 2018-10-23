@@ -5,11 +5,14 @@ class Implications():
     """
     Validate the DAG against the data
     """
-    def __init__(self, graph, data, vartypes, independence_test):
+    def __init__(self, graph, data, independence_test, categorical_vars=None):
         
         self.graph = graph
         self.data = data
-        self.vartypes = vartypes
+        if categorical_vars is None:
+            self.categorical_vars = []
+        else:
+            self.categorical_vars = categorical_vars
         self.independence_test = independence_test
         
         # Validate against the data
@@ -50,7 +53,12 @@ class Implications():
         
         for (x, y, z, independence_flag) in self.implications:
             
-            self.independence_test.fit([x], y, z, self.data)
+            if y in self.categorical_vars:
+                categorical_outcome=True
+            else:
+                categorical_outcome=False
+            
+            self.independence_test.fit([x], y, z, categorical_outcome=categorical_outcome, data=self.data)
             test_result = self.independence_test.is_independent()
             
             if test_result == independence_flag:

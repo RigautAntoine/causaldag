@@ -8,13 +8,18 @@ class RobustLinearTest():
     def __init__(self, alpha=0.05):
         self.alpha = alpha
         
-    def fit(self, x, y, z, data, family=None):
+    def fit(self, x, y, z, data, categorical_outcome=False):
         self.x = x
         self.y = y
         self.z = z
         self.data = data
         
-        self.model = sm.RLM(data[y], data[x+z]).fit()
+        if categorical_outcome:
+            family = sm.families.Binomial()
+        else:
+            family = sm.families.Gaussian()
+            
+        self.model = sm.RLM(data[y], data[x+z], family=family).fit()
         self.coef = self.model.params[x][0]
         confidence_interval = self.model.conf_int(alpha=self.alpha)
         self.lower, self.upper = confidence_interval.loc[x, 0][0], confidence_interval.loc[x, 1][0]
