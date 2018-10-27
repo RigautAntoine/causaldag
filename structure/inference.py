@@ -2,12 +2,15 @@ from .graphs import Graph
 from .utils import get_all_possible_sets
 
 class IC_star():
-    
+    """
+    Implements the IC* (inductive causation) inference algorithm
+    """
     def __init__(self, data, independence_test, categorical_vars=None):
         """
         Parameters:
-        
-        data (pandas.DataFrame): data to infer a causal diagram from
+            data (pandas.DataFrame): data to infer a causal diagram from
+            independence_test (test object): method for testing independence between variables
+            categorical_vars (list of str): list of categorical variables
         """
         self.data = data
         self.independence_test = independence_test
@@ -21,7 +24,9 @@ class IC_star():
         self.infer()
         
     def infer(self):
-        
+        """
+        Inference algorithm
+        """
         # Step 1: Initialize a fully-connected undirect graph
         self._initialize_graph()
         # Step 2: Find all conditioning sets
