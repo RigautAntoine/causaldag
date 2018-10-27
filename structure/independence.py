@@ -3,12 +3,19 @@ import statsmodels.api as sm
 
 class RobustLinearTest():
     """
-    Implements Robust Linear Regression test
+    Class that implements the Robust Linear Regression test using the Statsmodels API
     """
     def __init__(self, alpha=0.05):
         self.alpha = alpha
         
     def fit(self, x, y, z, data, categorical_outcome=False):
+        """
+        Attributes
+            x (list of str): list of treatment variables
+            y (str): outcome variable
+            z (str): conditioned variables
+            categorical_outcome (bool): flag the outcome variable as categorical or not
+        """
         self.x = x
         self.y = y
         self.z = z
