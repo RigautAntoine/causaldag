@@ -3,9 +3,23 @@ from .graphs import Path
 
 class Implications():
     """
-    Validate the DAG against the data
+    Class that validates a user-provided Causal DAG against the data provided
+    
+    Attributes:
+        graph (CausalDAG objet)
+        implications: all testable implications of the provided graph
+        weak_contradictions: the graph implied dependence but no dependence was detected by the test
+        strong_contradictions: the graph implied no dependence between two variables 
+            but the test found statistically-significant dependance
     """
     def __init__(self, graph, data, independence_test, categorical_vars=None):
+        """
+        Parameters:
+            graph (CausalDAG object): user-provided DAG
+            data (pandas.DataFrame): data to infer a causal diagram from
+            independence_test (test object): method for testing independence between variables
+            categorical_vars (list of str): list of categorical variables
+        """
         
         self.graph = graph
         self.data = data
@@ -15,15 +29,14 @@ class Implications():
             self.categorical_vars = categorical_vars
         self.independence_test = independence_test
         
-        # Validate against the data
+        # Step 1: Generate all testable implications
         self.implications = self._generate_testable_implications()
         
-        # For each implication, test if True
+        # Step 2: For each implication, test if True
         self._check_implications_against_data()
         
         
     def _generate_testable_implications(self):
-        # Step 1: Generate all testable implications
         independence_implications = []
         
         for (v_a, v_b) in get_all_possible_sets(self.graph.nodes(), 2):
