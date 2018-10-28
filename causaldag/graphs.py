@@ -108,8 +108,11 @@ class Graph():
         return list(simple_paths.all_simple_paths(self.G, v_a, v_b))
     
     def __str__(self):
+        s = ''
         for (v_a, v_b) in self.edges():
-            print('{} to {}, directed at {}'.format(v_a, v_b, self.get_edge_orientation(v_a, v_b)))
+            s += '{} to {}, directed at {}\n'.format(v_a, v_b, self.get_edge_orientation(v_a, v_b))
+        return s
+            
 
         
 class CausalDAG(Graph):
